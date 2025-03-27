@@ -1,45 +1,87 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
-
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# Dart & Flutter 관련
 .dart_tool/
+.packages
+.pub-cache/
 .flutter-plugins
 .flutter-plugins-dependencies
-.pub-cache/
-.pub/
-/build/
+.melos_tool/
+build/
+# For flutter 3.7+
+.dart_tool/package_config.json
 
-# Symbolication related
+# IntelliJ 관련
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# VS Code 관련
+.vscode/
+
+# macOS 관련
+.DS_Store
+*.log
+
+# Android 관련
+android/.gradle/
+android/captures/
+android/.idea/
+android/local.properties
+android/app/release/
+android/app/debug/
+android/app/profile/
+*.keystore
+
+# iOS 관련
+ios/Flutter/.last_build_id
+ios/Pods/
+ios/.symlinks/
+ios/.flutter-plugins
+ios/.flutter-plugins-dependencies
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/project.xcworkspace/
+ios/Runner.xcodeproj/xcuserdata/
+
+# Xcode 관련
+*.xcworkspace
+*.xcodeproj/project.xcworkspace/
+*.xcuserstate
+*.xcuserdata
+*.xcuserdatad
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# Web 관련
+web/.dart_tool/
+
+# Linux 관련
+linux/flutter/ephemeral/
+linux/CMakeFiles/
+linux/cmake-build-debug/
+linux/cmake-build-release/
+linux/build/
+
+# Windows 관련
+windows/flutter/ephemeral/
+windows/.vs/
+windows/build/
+windows/*.sln
+windows/*.vcxproj*
+windows/*.vcproj*
+windows/*.pdb
+
+# 기타
+*.class
+*.pyc
+*.swp
+*.lock
+*.tmp
+*.bak
+
+# Symbol, obfuscation
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
-
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
