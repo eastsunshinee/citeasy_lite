@@ -1,58 +1,67 @@
 import 'package:flutter/material.dart';
-import '../models/citation.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import '../viewmodels/reference_view_model.dart';
+import '../widgets/top_toolbar.dart';
+import '../widgets/citation_card.dart';
+import '../widgets/preview_panel.dart';
 
 class HomeView extends StatelessWidget {
-    
+    const HomeView({super.key});
 
-  final List<Citation> dummyCitations = [
-    Citation(title: '딥러닝의 이해', author: '홍길동', year: '2023', source: 'DBpia'),
-    Citation(title: 'AI 혁명', author: '이순신', year: '2022', source: 'KISS'),
-  ];
+    @override
+    Widget build(BuildContext context) {
+        return ChangeNotifierProvider(
+            create: (_) => ReferenceViewModel(),
+            child: Scaffold(
+                appBar: AppBar(
+                    title: const Text("Citeasy"),
+                ),
+                body: Column(
+                    children: [
+                        const TopToolbar(),
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Citeasy Lite'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              // TODO: 설정 화면 이동
-            },
-          )
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: dummyCitations.length,
-        itemBuilder: (context, index) {
-          final citation = dummyCitations[index];
-          return Card(
-            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            child: ListTile(
-              title: Text(citation.title),
-              subtitle: Text('${citation.author} • ${citation.year} • ${citation.source}'),
-              trailing: IconButton(
-                icon: Icon(Icons.copy),
-                onPressed: () {
-                  final formatted = '${citation.author} (${citation.year}). ${citation.title}. ${citation.source}.';
-                  Clipboard.setData(ClipboardData(text: formatted));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('인용문이 복사되었습니다')),
-                  );
-                },
-              ),
+                        Expanded(
+                            child: Consumer<ReferenceViewModel>(
+                                builder: (context, viewModel, _) {
+                                    return ListView.builder(
+                                        itemCount: viewModel.references.length,
+                                        itemBuilder: (context, index) {
+                                            final item = viewModel.references[index];
+                                            final isSelected = viewModel.selectedItemIds.contains(item.id);
+                                            return CitationCard(
+                                                item: item,
+                                                isSelected: isSelected,
+                                                onToggle: () => viewModel.toggleSelection(item.id),
+                                            );
+                                        },
+                                    );
+                                },
+                            ),
+                        ),
+
+                        Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            child: Consumer<ReferenceViewModel>(
+                                builder: (context, viewModel, _) {
+                                    return SizedBox(
+                                        width: double.infinity,
+                                        child: ElevatedButton.icon(
+                                            onPressed: viewModel.selectedItems.isEmpty
+                                                ? null
+                                                : () => viewModel.handleCitation(context),
+                                            icon: const Icon(Icons.copy),
+                                            label: const Text("참고문헌 생성"),
+                                        ),
+                                    );
+                                },
+                            ),
+                        ),
+
+                        const PreviewPanel(),
+                    ],
+                ),
             ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          // TODO: AddCitationView로 이동
-        },
-      ),
-    );
-  }
+        );
+    }
 }
