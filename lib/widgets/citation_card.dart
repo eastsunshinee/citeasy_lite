@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../viewmodels/reference_view_model.dart';
+import '../models/reference_item.dart';
 
 class CitationCard extends StatelessWidget {
     final ReferenceItem item;

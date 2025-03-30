@@ -1,67 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../viewmodels/reference_view_model.dart';
-import '../widgets/top_toolbar.dart';
-import '../widgets/citation_card.dart';
-import '../widgets/preview_panel.dart';
+import 'package:citeasy_lite/viewmodels/citation_view_model.dart';
+import 'package:citeasy_lite/widgets/top_toolbar.dart';
+import 'package:citeasy_lite/widgets/citation_card.dart';
+import 'package:citeasy_lite/widgets/preview_panel.dart';
 
 class HomeView extends StatelessWidget {
-    const HomeView({super.key});
+	const HomeView({super.key});
 
-    @override
-    Widget build(BuildContext context) {
-        return ChangeNotifierProvider(
-            create: (_) => ReferenceViewModel(),
-            child: Scaffold(
-                appBar: AppBar(
-                    title: const Text("Citeasy"),
-                ),
-                body: Column(
-                    children: [
-                        const TopToolbar(),
-
-                        Expanded(
-                            child: Consumer<ReferenceViewModel>(
-                                builder: (context, viewModel, _) {
-                                    return ListView.builder(
-                                        itemCount: viewModel.references.length,
-                                        itemBuilder: (context, index) {
-                                            final item = viewModel.references[index];
-                                            final isSelected = viewModel.selectedItemIds.contains(item.id);
-                                            return CitationCard(
-                                                item: item,
-                                                isSelected: isSelected,
-                                                onToggle: () => viewModel.toggleSelection(item.id),
-                                            );
-                                        },
-                                    );
-                                },
-                            ),
-                        ),
-
-                        Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            child: Consumer<ReferenceViewModel>(
-                                builder: (context, viewModel, _) {
-                                    return SizedBox(
-                                        width: double.infinity,
-                                        child: ElevatedButton.icon(
-                                            onPressed: viewModel.selectedItems.isEmpty
-                                                ? null
-                                                : () => viewModel.handleCitation(context),
-                                            icon: const Icon(Icons.copy),
-                                            label: const Text("참고문헌 생성"),
-                                        ),
-                                    );
-                                },
-                            ),
-                        ),
-
-                        const PreviewPanel(),
-                    ],
-                ),
-            ),
-        );
-    }
+	@override
+	Widget build(BuildContext context) {
+		return ChangeNotifierProvider(
+			create: (_) => CitationViewModel(),
+			child: Consumer<CitationViewModel>(
+				builder: (context, vm, _) {
+					return Scaffold(
+						backgroundColor: Theme.of(context).colorScheme.surface,
+						body: Column(
+							children: [
+								TopToolbar(
+									sorting: vm.sorting,
+									onSortingChanged: vm.updateSorting,
+									searchController: vm.searchController,
+									onSearchChanged: vm.updateSearch,
+									onGeneratePressed: vm.generateCitation,
+								),
+								const Divider(height: 1),
+								Expanded(
+									child: ListView.builder(
+										padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+										itemCount: vm.filteredCitations.length,
+										itemBuilder: (context, index) {
+											final item = vm.filteredCitations[index];
+											return Padding(
+												padding: const EdgeInsets.only(bottom: 8),
+												child: CitationCard(
+													item: item,
+													isSelected: false, // 추후 상태에 맞게 연결
+													onToggle: () {},   // 선택 토글 로직 연결 가능
+												),
+											);
+										},
+									),
+								),
+								const PreviewPanel(),
+							],
+						),
+					);
+				},
+			),
+		);
+	}
 }
