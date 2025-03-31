@@ -1,61 +1,46 @@
+// lib/widgets/top_toolbar.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../viewmodels/reference_view_model.dart';
+import '../constants/app_colors.dart';
+import 'search_input_field.dart';
+import 'primary_action_button.dart';
 
 class TopToolbar extends StatelessWidget {
-    const TopToolbar({super.key});
+	final TextEditingController searchController;
+	final void Function(String) onSearchChanged;
+	final void Function() onGeneratePressed;
+    final bool isGenerateEnabled;
 
-    @override
-    Widget build(BuildContext context) {
-        final vm = context.watch<ReferenceViewModel>();
+	const TopToolbar({
+		Key? key,
+		required this.searchController,
+		required this.onSearchChanged,
+		required this.onGeneratePressed,
+        this.isGenerateEnabled = true,
+	}) : super(key: key);
 
-        return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-                children: [
-                    const Text(
-                        "정렬 기준:",
-                        style: TextStyle(fontSize: 14),
+	@override
+	Widget build(BuildContext context) {
+		return Container(
+			padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+			color: AppColors.background,
+			child: Row(
+				children: [
+					Expanded(
+						child: SearchInputField(
+							controller: searchController,
+							onChanged: onSearchChanged,
+							hintText: '논문 제목, 저자명 등으로 검색',
+						),
+					),
+					const SizedBox(width: 12),
+					PrimaryActionButton(
+                        label: '참고문헌 생성',
+                        icon: Icons.format_quote,
+                        onPressed: onGeneratePressed,
+                        isEnabled: isGenerateEnabled,
                     ),
-                    const SizedBox(width: 8),
-                    DropdownButton<String>(
-                        value: "최신순", // 실제 옵션 없음
-                        items: const [
-                            DropdownMenuItem(value: "최신순", child: Text("최신순")),
-                            DropdownMenuItem(value: "오래된순", child: Text("오래된순")),
-                        ],
-                        onChanged: (value) {
-                            // 정렬 기능 미구현이므로 비워둠
-                        },
-                    ),
-                    const Spacer(),
-                    const Text("사용 중인 양식:"),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                        onPressed: () {
-                            // 향후 스타일 변경 처리
-                        },
-                        child: const Text("APA 7th"),
-                    ),
-                    const SizedBox(width: 12),
-                    ToggleButtons(
-                        isSelected: const [true, false],
-                        onPressed: (index) {
-                            // 언어 토글 (국문/영문) 기능 미구현
-                        },
-                        children: const [
-                            Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: Text("국문"),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: Text("영문"),
-                            ),
-                        ],
-                    )
-                ],
-            ),
-        );
-    }
+				],
+			),
+		);
+	}
 }

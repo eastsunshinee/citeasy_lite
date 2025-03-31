@@ -1,57 +1,43 @@
 import 'package:flutter/material.dart';
-import '../../viewmodels/reference_view_model.dart';
+import '../constants/app_colors.dart';
+import '../models/reference_item.dart';
 
 class CitationCard extends StatelessWidget {
-    final ReferenceItem item;
-    final bool isSelected;
-    final VoidCallback onToggle;
+	final ReferenceItem item;
+	final VoidCallback onToggle;
+	final bool isSelected;
 
-    const CitationCard({
-        super.key,
-        required this.item,
-        required this.isSelected,
-        required this.onToggle,
-    });
+	const CitationCard({
+		super.key,
+		required this.item,
+		required this.onToggle,
+		required this.isSelected,
+	});
 
-    @override
-    Widget build(BuildContext context) {
-        return GestureDetector(
-            onTap: onToggle,
-            child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
-                        : Theme.of(context).colorScheme.surface,
-                    border: Border.all(
-                        color: isSelected
-                            ? Theme.of(context).colorScheme.primary
-                            : Colors.grey.shade300,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                        Text(
-                            item.title,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                            ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                            "${item.author} · ${item.year}",
-                            style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                            ),
-                        ),
-                    ],
-                ),
-            ),
-        );
-    }
+	@override
+	Widget build(BuildContext context) {
+		return Card(
+			color: isSelected
+					? AppColors.surfaceContainerHighest
+					: AppColors.surface,
+			child: ListTile(
+				contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+				title: Text(
+					item.title,
+					style: const TextStyle(color: AppColors.textPrimary),
+				),
+				subtitle: Text(
+					"${item.author} • ${item.year}",
+					style: const TextStyle(color: AppColors.textSecondary),
+				),
+				trailing: Checkbox(
+					value: isSelected,
+					onChanged: (_) => onToggle(),
+					activeColor: AppColors.primary,
+                    checkColor: AppColors.onSurface,
+				),
+				onTap: onToggle,
+			),
+		);
+	}
 }
