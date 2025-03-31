@@ -1,51 +1,111 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:citeasy_lite/constants/app_colors.dart';
 
 class SideMenu extends StatelessWidget {
-	const SideMenu({super.key});
+	final int selectedIndex;
+	final ValueChanged<int> onItemSelected;
+
+	const SideMenu({
+		super.key,
+		required this.selectedIndex,
+		required this.onItemSelected,
+	});
 
 	@override
 	Widget build(BuildContext context) {
-		return Container(
-			width: 240, // 좌측 메뉴 너비
-			color: Theme.of(context).colorScheme.surfaceVariant,
-			child: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: [
-					const SizedBox(height: 24),
-					_buildMenuItem(context, Icons.folder_copy, '내 서재', onTap: () {
-						// TODO: 내 서재 화면으로 이동
-					}),
-					_buildMenuItem(context, Icons.format_quote, '인용 양식', onTap: () {
-						// TODO: 인용 양식 화면으로 이동
-					}),
-					_buildMenuItem(context, Icons.settings, '설정', onTap: () {
-						// TODO: 설정 화면으로 이동
-					}),
-					const Spacer(),
-					Padding(
-						padding: const EdgeInsets.all(16.0),
-						child: Text(
-							'v1.0.0',
-							style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Colors.grey),
-						),
+		return Material(
+			color: AppColors.surface,
+			child: SafeArea(
+				child: Container(
+					width: 240,
+					padding: const EdgeInsets.symmetric(vertical: 24),
+					color: AppColors.surface,
+					child: Column(
+						crossAxisAlignment: CrossAxisAlignment.start,
+						children: [
+							const Padding(
+								padding: EdgeInsets.symmetric(horizontal: 24),
+								child: Text(
+									'CITEASY',
+									style: TextStyle(
+										fontSize: 24,
+										fontWeight: FontWeight.bold,
+										color: AppColors.onSurface,
+										decoration: TextDecoration.none,
+									),
+								),
+							),
+							const SizedBox(height: 32),
+							_navItem(
+								icon: PhosphorIcons.bookOpen,
+								label: '내 서재',
+								index: 0,
+								selected: selectedIndex == 0,
+								onTap: () => onItemSelected(0),
+							),
+							_navItem(
+								icon: PhosphorIcons.gearSix,
+								label: '설정',
+								index: 1,
+								selected: selectedIndex == 1,
+								onTap: () => onItemSelected(1),
+							),
+							const Spacer(),
+							_navItem(
+								icon: PhosphorIcons.arrowCounterClockwise,
+								label: '불러오기',
+								index: 2,
+								selected: false,
+								onTap: () {},
+							),
+							_navItem(
+								icon: PhosphorIcons.question,
+								label: '도움말',
+								index: 3,
+								selected: false,
+								onTap: () {},
+							),
+						],
 					),
-				],
+				),
 			),
 		);
 	}
 
-	Widget _buildMenuItem(BuildContext context, IconData icon, String title, {VoidCallback? onTap}) {
+	Widget _navItem({
+		required IconData icon,
+		required String label,
+		required int index,
+		required bool selected,
+		required VoidCallback onTap,
+	}) {
 		return InkWell(
 			onTap: onTap,
-			child: Padding(
-				padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+			child: Container(
+				width: double.infinity,
+				padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+				margin: const EdgeInsets.only(bottom: 4),
+				decoration: BoxDecoration(
+					color: selected ? AppColors.primary : Colors.transparent,
+					// borderRadius: BorderRadius.circular(8),
+				),
 				child: Row(
 					children: [
-						Icon(icon, size: 20, color: Theme.of(context).colorScheme.onSurface),
+						Icon(
+							icon,
+							color: selected ? AppColors.onSurface : AppColors.textSecondary,
+							size: 20,
+						),
 						const SizedBox(width: 12),
 						Text(
-							title,
-							style: Theme.of(context).textTheme.bodyMedium,
+							label,
+							style: TextStyle(
+								fontSize: 16,
+								color: selected ? AppColors.onSurface : AppColors.textSecondary,
+								fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+								decoration: TextDecoration.none,
+							),
 						),
 					],
 				),
