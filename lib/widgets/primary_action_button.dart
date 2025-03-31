@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:citeasy_lite/constants/app_colors.dart';
 
 class PrimaryActionButton extends StatelessWidget {
 	final String label;
@@ -18,10 +19,9 @@ class PrimaryActionButton extends StatelessWidget {
 	Widget build(BuildContext context) {
 		final theme = Theme.of(context);
 		final backgroundColor = isEnabled
-			? theme.colorScheme.primary
-			: theme.disabledColor.withOpacity(0.3);
-
-		final foregroundColor = Colors.white;
+			? AppColors.primary
+			: AppColors.onSurface.withOpacity(0.3);
+		final foregroundColor = AppColors.onSurface;
 
 		return SizedBox(
 			height: 44,

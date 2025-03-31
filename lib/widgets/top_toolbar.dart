@@ -1,68 +1,44 @@
+// lib/widgets/top_toolbar.dart
 import 'package:flutter/material.dart';
-import 'package:citeasy_lite/widgets/flat_button.dart';
-import 'package:citeasy_lite/widgets/primary_action_button.dart';
-import 'package:citeasy_lite/widgets/toolbar_chip.dart';
-import 'package:citeasy_lite/widgets/search_input_field.dart';
+import '../constants/app_colors.dart';
+import 'search_input_field.dart';
+import 'primary_action_button.dart';
 
 class TopToolbar extends StatelessWidget {
+	final TextEditingController searchController;
+	final void Function(String) onSearchChanged;
+	final void Function() onGeneratePressed;
+    final bool isGenerateEnabled;
+
 	const TopToolbar({
-		super.key,
-		required this.sorting,
-		required this.onSortingChanged,
+		Key? key,
 		required this.searchController,
 		required this.onSearchChanged,
 		required this.onGeneratePressed,
-	});
-
-	final String sorting;
-	final void Function(String) onSortingChanged;
-	final TextEditingController searchController;
-	final void Function(String) onSearchChanged;
-	final VoidCallback onGeneratePressed;
+        this.isGenerateEnabled = true,
+	}) : super(key: key);
 
 	@override
 	Widget build(BuildContext context) {
-		return Padding(
+		return Container(
 			padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-			child: Column(
+			color: AppColors.background,
+			child: Row(
 				children: [
-					Row(
-						children: [
-							FlatButton(label: "양식: APA", onPressed: () {}),
-							const SizedBox(width: 8),
-							FlatButton(label: "언어: 한국어", onPressed: () {}),
-							const Spacer(),
-							PrimaryActionButton(
-								label: "참고문헌 생성",
-								icon: Icons.menu_book_rounded,
-								onPressed: onGeneratePressed,
-							),
-						],
+					Expanded(
+						child: SearchInputField(
+							controller: searchController,
+							onChanged: onSearchChanged,
+							hintText: '논문 제목, 저자명 등으로 검색',
+						),
 					),
-					const SizedBox(height: 12),
-					Row(
-						children: [
-							ToolbarChip(
-								label: "최신순",
-								isSelected: sorting == '최신순',
-								onPressed: () => onSortingChanged('최신순'),
-							),
-							ToolbarChip(
-								label: "등록순",
-								isSelected: sorting == '등록순',
-								onPressed: () => onSortingChanged('등록순'),
-							),
-							const Spacer(),
-							SizedBox(
-								width: 240,
-								child: SearchInputField(
-									controller: searchController,
-									hintText: "참고문헌 검색",
-									onChanged: onSearchChanged,
-								),
-							),
-						],
-					),
+					const SizedBox(width: 12),
+					PrimaryActionButton(
+                        label: '참고문헌 생성',
+                        icon: Icons.format_quote,
+                        onPressed: onGeneratePressed,
+                        isEnabled: isGenerateEnabled,
+                    ),
 				],
 			),
 		);
